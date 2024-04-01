@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Task 2.1</title>
+    <style>span{color: red; font-weight: 600;}
+    </style>
+  </head>
+<body>
+    <div class="container">
+  <div id="show"></div>
+</div>
+<script>
+    const employees = [
+    {name:'Anna',email:'Anna45@email.com',age:27,dept:'Technology',gradCourse:'B.Tech',gradYear:2015,gradPerf:'Good',postgrad:false,workBefore:true,workEx:'0-1 year'},
+    {name:'John',email:'john@email.com',age:24,dept:'Technology',gradCourse:'B.Tech',gradYear:2015,gradPerf:'Good',postgrad:false,workBefore:false,workEx:'None'},
+    {name:'Edwards',email:'edwards@email.com',age:29,dept:'Accounts',gradCourse:'B.Com',gradYear:2015,gradPerf:'Excellent',postgrad:true,workBefore:true,workEx:'3+ years'},
+    {name:'Julia',email:'julia@email.com',age:28,dept:'Technology',gradCourse:'B.Tech',gradYear:2015,gradPerf:'Excellent',postgrad:true,workBefore:true,workEx:'1-3 years'},
+];
+    const departments = ['Technology','Accounts','Operations','HR'];
+    const gradeOptions = [
+        {display:'A',value:'Excellent'},
+        {display:'B',value:'Good'},
+        {display:'C',value:'Average'},
+        {display:'D',value:'Poor'},
+    ];
+
+    const paymentsOptions = [
+        {display:'Corporate Card', value:'Corporate Card'},
+        {display:'Bill to Company', value:'Bill to Company'},
+        {display:'Self', value:'Self'},
+    ];
+ const workExp = [
+        {display:'None',value:'None'},
+        {display:'0-1 year',value:'0-1 year'},
+        {display:'1-3 years',value:'1-3 years'},
+        {display:'3+ years',value:'3+ years'},
+ ]
+ const years = ['2019','2020','2021','2022','2023'];
+
+const expenses = [
+    {name:'John',category:'Local Travel',billId:'NP7561',amount:64,payment:'Self',approved:true},
+    {name:'Anna',category:'Communication',billId:'BN8561',amount:39,payment:'Self',approved:false},
+    {name:'Edwards',category:'Local Travel',billId:'AT5461',amount:58,payment:'Corporate Card',approved:true},
+    {name:'Julia',category:'Local Travel',billId:'RR5492',amount:71,payment:'Self',approved:true},
+    {name:'Julia',category:'Out of City Travel',billId:'KT8785',amount:277,payment:'Bill to Company',approved:true},
+    {name:'Edwards',category:'Others',billId:'UR0400',amount:25,payment:'Corporate Card',approved:false},
+    {name:'Edwards',category:'Out of City Travel',billId:'CC6586',amount:305,payment:'Corporate Card',approved:false},
+    {name:'Julia',category:'Communication',billId:'DL3425',amount:43,payment:'Self',approved:false},
+    {name:'Julia',category:'Out of City Travel',billId:'MW65775',amount:248,payment:'Bill to Company',approved:true},
+    {name:'Edwards',category:'Others',billId:'JR56732',amount:52,payment:'Corporate Card',approved:true},
+    {name:'Julia',category:'Out of City Travel',billId:'BK0074',amount:405,payment:'Bill to Company',approved:false},
+    {name:'Edwards',category:'Communication',billId:'JR56732',amount:72,payment:'Corporate Card',approved:true}
+];
+
+let originalExpenses = [...expenses];
+const employeeNames = ['John','Anna','Edwards','Julia'];
+const categories = ['Local Travel','Communication','Out of City Travel','Others'];
+
+ let editIndex = -1;
+    let myproduct = {};
+    let errors = {};
+    let er = {};
+
+  show();
+  function show(active=0){
+    let str = makeNavBar(active);
+    active === 1 ? str+= showEmployeesTable() : str+= '';
+    active === 2 ? str+= showForm() : str+= '';
+    active === 3 ? str+= showDeptTable() : str+= '';
+    active === 4 ? str+= showDeptForm() : str+= '';
+    active === 5 ? str+= showExpencesTable() : str+= '';
+    active === 6 ? str+= addExpensesForm() : str+= '';
+    document.getElementById('show').innerHTML = str;
+  }
+
+  function showEmployee(){
+    editIndex = -1;
+    myproduct = {};
+    show(1);
+  }
+  function addEmployeeForm(){
+    show(2);
+  }
+  function showDepartments(){
+    show(3);
+  }
+  function addDept(){
+    show(4);
+  } 
+  function showExpences(){
+    editIndex = -1;
+    myproduct = {};
+    show(5);
+  }
+  function addExpences(){
+    show(6);
+  }
+  
+  function makeNavBar(active=0){
+    let str = '<nav class="navbar navbar-expand-lg navbar-light bg-light">';
+    str += '<a class="navbar-brand" href="#">Employee System</a>';
+    str += '<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">';
+    str += '<span class="navbar-toggler-icon"></span>';
+    str += '</button>';
+    str += '<div class="collapse navbar-collapse" id="navbarSupportedContent">';
+    str += '<ul class="navbar-nav mr-auto">';
+    let active1 = active === 1 ? 'active' : '';
+    let active2 = active === 2 ? 'active' : '';
+    let active3 = active === 3 ? 'active' : '';
+    let active4 = active === 4 ? 'active' : '';
+    let active5 = active === 5 ? 'active' : '';
+    let active6 = active === 6 ? 'active' : '';
+    str += '<li class="nav-item '+active1+'">'; 
+    str += '<a class="nav-link" onclick="showEmployee()">Show Employees</a>';
+    str += '</li>';
+    str += '<li class="nav-item '+active2+'">';
+    str += '<a class="nav-link" onclick="addEmployeeForm()">Add an Employee</a>';
+    str += '</li>';
+    str += '<li class="nav-item '+active3+'">';
+    str += '<a class="nav-link" onclick="showDepartments()">Departments</a>';
+    str += '</li>';
+    str += '<li class="nav-item '+active4+'">';
+    str += '<a class="nav-link" onclick="addDept()">Add a Dept</a>';
+    str += '</li>';
+    str += '<li class="nav-item '+active5+'">';
+    str += '<a class="nav-link" onclick="showExpences()">Expenses</a>';
+    str += '</li>';
+    str += '<li class="nav-item '+active6+'">';
+    str += '<a class="nav-link" onclick="addExpences()">Add an Expense</a>';
+    str += '</li>';
+    str += '</ul>';
+    str += '</div>';
+    str += '</nav>';
+    return str;
+  }
+
+
+  function validate(pr){
+    errors.name = pr.name ? '' : 'Name is mandatory';
+    errors.age = (+pr.age) ? '' : 'Age is mandatory';
+    errors.email = pr.email ? '' : 'Email is mandatory';
+    errors.dept = pr.dept ? '' : 'Select the Department';
+    errors.workEx = pr.workEx ? '' : 'Choose the appropriate work exprience';
+    errors.gradCourse = pr.gradCourse ? '' : 'Graduation Course mandatory';
+    console.log(errors);
+    return !(errors.name || errors.email || errors.age || errors.gradCourse || errors.dept || errors.workEx);
+  }
+
+function deleteProduct(index){
+employees.splice(index,1);
+showEmployee();
+}
+
+function editProduct(index){
+editIndex = index;
+myproduct = employees[index];
+addEmployeeForm();
+}
+
+
+
+function showExpencesTable(){
+    const arr = expenses.map((emp,index) => {
+            let {name,category,billId,amount,payment,approved} = emp;
+            let str = '<div class="row border">';    
+            str += '<div class="col-2">'+name+'</div>';
+            str += '<div class="col-2">'+category+'</div>';
+            str += '<div class="col-1">'+billId+'</div>';
+            str += '<div class="col-1">'+amount+'</div>';
+            str += '<div class="col-2">'+payment+'</div>';
+            str += '<div class="col-2">'+approved+'</div>';
+            if(approved == false)
+                str += '<div class="col-2"><button class="btn btn-secondary btn-sm" onclick="approvedFn('+index+')">Approve</button></div>';
+            str += '</div>';
+            return str;
+        });
+       let table = '<div class="col-12 text-center"><h3>List of Expense of Employees</h3></div>';
+            table += '<div class="row bg-dark text-white">';
+            table += '<div class="col-2">Name</div>';
+            table += '<div class="col-2">Category</div>';
+            table += '<div class="col-1">Bill Id</div>';
+            table += '<div class="col-1">Amount</div>';
+            table += '<div class="col-2">Payment</div>';
+            table += '<div class="col-2">Approved</div>';
+            table += '<div class="col-2"></div>';
+            table += '</div>';
+            table += arr.join('');
+            return table;
+}
+
+function addExpensesForm(){
+    let {name='',category='', billId='',amount='',payment='',approved=false} = myproduct;
+            let str = '<h3>Add a New Employee</h3>';
+            str += makeDropDawn('exId',employeeNames,'Select the Employee',errors.name);
+            str += '<span id="st" class="text-danger"></span>';
+            str += makeDropDawn('cate',categories,'Select Expense Category',errors.category);
+            str += '<span id="st1" class="text-danger"></span>';
+            str += makeTextField('billId','Bill Id','Enter the bill Id',errors.billId);
+            str += '<span id="st2" class="text-danger"></span>';
+            str += makeTextField('amt','Amount','Enter the Expense amount',errors.amount);
+            str += '<span id="st3" class="text-danger"></span><br>';
+            str += makeRadios(paymentsOptions,'How was the bill paid','paid',errors.payment);
+            str += '<br><span id="st4" class="text-danger"></span>';
+            str += makeCheckbox('cb1','Has the expense been approved',approved);
+            str += '<button class="btn btn-primary" onclick="submitExpense()">Submit</button>';
+            return str;
+}
+
+function approvedFn(index){
+  expenses[index].approved = true;
+    showExpences();
+}
+
+let st = [];
+console.log(st);
+
+function approvedFn2(index){
+  st[index].approved = true;
+    let str = makeNavBar(active=0);
+    active === 1 ? str+= showEmployeesTable() : str+= '';
+    active === 2 ? str+= showForm() : str+= '';
+    active === 3 ? str+= showDeptTable() : str+= '';
+    active === 4 ? str+= showDeptForm() : str+= '';
+    active === 5 ? str+= showExpencesTable() : str+= '';
+    active === 6 ? str+= addExpensesForm() : str+= '';
+    const arr = st.map((emp,index) => {
+            let {name,category,billId,amount,payment,approved} = emp;
+            let str ='<div class="row border">';    
+            str += '<div class="col-2">'+name+'</div>';
+            str += '<div class="col-2">'+category+'</div>';
+            str += '<div class="col-1">'+billId+'</div>';
+            str += '<div class="col-1">'+amount+'</div>';
+            str += '<div class="col-2">'+payment+'</div>';
+            str += '<div class="col-2">'+approved+'</div>';
+            if(approved == false)
+                str += '<div class="col-2"><button class="btn btn-secondary btn-sm" onclick="approvedFn2('+index+')">Approve</button></div>';
+            str += '</div>';
+            return str;
+        });
+       let table = '<div class="col-12 text-center"><h3>List of Expenses</h3></div>';
+            table += '<div class="row bg-dark text-white">';
+            table += '<div class="col-2">Name</div>';
+            table += '<div class="col-2">Category</div>';
+            table += '<div class="col-1">Bill Id</div>';
+            table += '<div class="col-1">Amount</div>';
+            table += '<div class="col-2">Payment</div>';
+            table += '<div class="col-2">Approved</div>';
+            table += '<div class="col-2"></div>';
+            table += '</div>';
+            table += arr.join('');
+            document.getElementById('show').innerHTML = str+table;
+}
+
+function expensesData(name){
+  const filteredArr = expenses.filter((expense) =>
+   expense.name === name);
+    st = [...filteredArr];
+    let str = makeNavBar(active=0);
+    active === 1 ? str+= showEmployeesTable() : str+= '';
+    active === 2 ? str+= showForm() : str+= '';
+    active === 3 ? str+= showDeptTable() : str+= '';
+    active === 4 ? str+= showDeptForm() : str+= '';
+    active === 5 ? str+= showExpencesTable() : str+= '';
+    active === 6 ? str+= addExpensesForm() : str+= '';
+    const arr = filteredArr.map((emp,index) => {
+            let {name,category,billId,amount,payment,approved} = emp;
+            let str ='<div class="row border">';    
+            str += '<div class="col-2">'+name+'</div>';
+            str += '<div class="col-2">'+category+'</div>';
+            str += '<div class="col-1">'+billId+'</div>';
+            str += '<div class="col-1">'+amount+'</div>';
+            str += '<div class="col-2">'+payment+'</div>';
+            str += '<div class="col-2">'+approved+'</div>';
+            if(approved == false)
+                str += '<div class="col-2"><button class="btn btn-secondary btn-sm" onclick="approvedFn2('+index+')">Approve</button></div>';
+            str += '</div>';
+            return str;
+        });
+       let table = '<div class="col-12 text-center"><h3>List of Expenses</h3></div>';
+            table += '<div class="row bg-dark text-white">';
+            table += '<div class="col-2">Name</div>';
+            table += '<div class="col-2">Category</div>';
+            table += '<div class="col-1">Bill Id</div>';
+            table += '<div class="col-1">Amount</div>';
+            table += '<div class="col-2">Payment</div>';
+            table += '<div class="col-2">Approved</div>';
+            table += '<div class="col-2"></div>';
+            table += '</div>';
+            table += arr.join('');
+            document.getElementById('show').innerHTML = str+table;
+}
+  
+function submitExpense(){
+  let empName = document.getElementById('exId').value;
+    let cate = document.getElementById('cate').value;
+    let bill = document.getElementById('billId').value;
+    let amt = document.getElementById('amt').value;
+    let radios = document.getElementsByName('paid');
+    let pay = '';
+    for(let i=0; i<radios.length; i++){
+        if(radios[i].checked){
+            pay = radios[i].value;
+        }
+    }
+    let cb1 = document.getElementById('cb1').checked;
+    let ex = {name:empName,category:cate,billId:bill,amount:amt,
+    payment:pay,approved:cb1};
+    if(ex.name=='' || ex.payment=='' || ex.category=='' || ex.billId=='' || ex.amount==''){
+      document.getElementById('st').innerHTML = ex.name=='' ? 'Select the Employee Name':'';
+      document.getElementById('st1').innerHTML =  ex.category=='' ? 'Select the Category' :'';
+      document.getElementById('st2').innerHTML = ex.billId=='' ? 'Bill Id is mandatory':'';
+      document.getElementById('st3').innerHTML =  ex.amount=='' ? 'Amount is mandatory':'';
+      document.getElementById('st4').innerHTML = ex.payment=='' ? 'Choose the applicable payment mode':'';
+      return false;
+    }
+     expenses.push(ex);
+      showExpences();
+  } 
+
+  function showEmployeesTable(){
+      const arr = employees.map((emp,index) => {
+            let {name,email,age,dept,gradCourse,workEx} = emp;
+            let str = '<div class="row border">';    
+            str += '<div class="col-2">'+name+'</div>';
+            str += '<div class="col-2">'+email+'</div>';
+            str += '<div class="col-1">'+age+'</div>';
+            str += '<div class="col-1">'+dept+'</div>';
+            str += '<div class="col-2">'+gradCourse+'</div>';
+            str += '<div class="col-2">'+workEx+'</div>';
+            str += '<div class="col-2"><button class="btn btn-secondary btn-sm" onclick="editProduct('+index+')"><i class="far fa-edit"></i></button><button class="btn btn-danger btn-sm" onclick="deleteProduct('+index+')"><i class="far fa-trash-alt"></i></button><button class="btn btn-warning btn-sm" onclick="expensesData(`'+name+'`)"><i class="fa fa-car"></i></button></div>';
+            str += '</div>';
+            return str;
+        });
+       let table = '<div class="col-12 text-center"><h3>List of Persons</h3></div>';
+            table += '<div class="row bg-dark text-white">';
+            table += '<div class="col-2" onclick="sort(0)">Name</div>';
+            table += '<div class="col-2" onclick="sort(1)">Email</div>';
+            table += '<div class="col-1" onclick="sort(2)">Age</div>';
+            table += '<div class="col-1" onclick="sort(3)">Dept</div>';
+            table += '<div class="col-2" onclick="sort(4)">Graduation</div>';
+            table += '<div class="col-2" onclick="sort(5)">Work Ex</div>';
+            table += '<div class="col-2"></div>';
+            table += '</div>';
+            let btn = '<button class="btn btn-primary mt-2" onclick="changeView()">Change View</button>';
+            table += arr.join('')+btn;
+            return table; 
+    }
+
+
+    function sort(colNo){
+    switch(colNo){
+        case 0: employees.sort((p1,p2)=>p1.name.localeCompare(p2.name));break;
+        case 1: employees.sort((p1,p2)=>p1.email.localeCompare(p2.email)); break;
+        case 2: employees.sort((p1,p2)=>(+p1.age)-(+p2.age)); break;
+        case 3: employees.sort((p1,p2)=>p1.dept.localeCompare(p2.dept)); break;
+        case 4: employees.sort((p1,p2)=>p1.gradCourse.localeCompare(p2.gradCourse));break;
+        case 5: employees.sort((p1,p2)=>p1.workEx.localeCompare(p2.workEx)); break;
+    }
+   showEmployee();
+  }
+
+    function showDeptTable(){
+      const arr = departments.map(dept => {
+            let str = '<div class="row border">';
+            str += '<div class="col-12">'+dept+'</div>';
+            str += '</div>';
+            return str;
+        });
+        let table = '<div class="row">';
+            if(departments.length == 0){
+                table += '<h5>No department has been defined</h5>';
+            } else{
+                table += '<div class="col-12 text-center">';
+                table += '<h4>List of Departments</h4>';
+                table += '</div>';
+            }
+            table += '</div>';
+            table += arr.join('');
+            return table; 
+    }
+
+    function showDeptForm(){
+            let str = makeTextField('deptId','Name of Department','Enter department');
+            str += '<button class="btn btn-primary" onclick="addDepartment()">Submit</button>';
+            return str;
+    }
+
+    function addDepartment(){
+    let deptName = document.getElementById('deptId').value;
+    departments.push(deptName);
+    showDepartments();
+  }
+
+    function showForm(){
+        let {name='',email='',age='',dept='',gradCourse='',gradYear='',gradPerf='',postgrad=false,workBefore=false,workEx=''} = myproduct;
+            let title = editIndex >=0 ? 'Edit Employee Details' : 'Add a New Employee';
+            let str = '<h3 class="text-center">'+title+'</h3>'; 
+            str += makeTextField('empId','Employee Name','Enter the Employee name',name,errors.name);
+            str += makeTextField('email','Email','george@gmail.com',email,errors.email);
+            str += makeTextField('age','Age','Enter your age',age,errors.age);
+            str += makeDropDawn('did',departments,'Select the Department',dept,errors.dept);
+            str += makeTextField('grdId','Graduation Degree','What degree did you get in graduation',gradCourse,errors.gradCourse);
+            str += makeRadios(gradeOptions,'Overall Grade in Graduation','grade',gradPerf,errors.gradPerf);
+            str += makeDropDawn('grdYear',years,'Select the Graduation year',gradYear,errors.gradYear);
+            str += makeCheckbox('cb1','Are you a post graduate',postgrad,errors.postgrad);
+            str += makeCheckbox('cb2','Do you have prior work exprience',workBefore,errors.workBefore);
+            str += makeRadios(workExp,'Year of work exprience','exp',workEx,errors.workEx)+'<br>';
+            str += '<button class="btn btn-primary" onclick="addEmployee()">Submit</button>';
+            return str;
+    }
+
+
+    function addEmployee(){
+    let empName = document.getElementById('empId').value;
+    let email = document.getElementById('email').value;
+    let age1 = document.getElementById('age').value;
+    let degree = document.getElementById('grdId').value;
+    let radios = document.getElementsByName('grade');
+    let grd = '';
+    for(let i=0; i<radios.length; i++){
+        if(radios[i].checked){
+            grd = radios[i].value;
+        }
+    }
+    let dep = document.getElementById('did').value;
+    console.log(dep);
+    let grdYrs = document.getElementById('grdYear').value;
+    let cb1 = document.getElementById('cb1').checked;
+    let cb2 = document.getElementById('cb2').checked;
+    let radios1 = document.getElementsByName('exp');
+    let workExprience = '';
+    for(let i=0; i<radios1.length; i++){
+        if(radios1[i].checked){
+            workExprience = radios1[i].value;
+        }
+    }
+    let emp = {name:empName,email:email,age:age1,dept:dep,gradCourse:degree,gradYear:grdYrs,
+    gradPerf:grd,postgrad:cb1,workBefore:cb2,workEx:workExprience};
+    if(validate(emp)){
+      editIndex >=0 ? employees[editIndex]=emp : employees.push(emp);
+      showEmployee();
+    } else{
+        myproduct = emp;
+        addEmployeeForm();
+    }
+  }
+     
+
+
+  function changeView(){
+   let str = makeNavBar(active=0);
+    active === 1 ? str+= showEmployeesTable() : str+= '';
+    active === 2 ? str+= showForm() : str+= '';
+    active === 3 ? str+= showDeptTable() : str+= '';
+    active === 4 ? str+= showDeptForm() : str+= '';
+   str += '<h2 class="text-center">List of Persons</h2>';
+  const arr = employees.map(pr => {
+    let {name,email,age,dept,gradCourse,gradYear,gradPerf,postgrad,workBefore,workEx} = pr;
+    let str = '<div class="col-md-3 card bg-light">';
+      str += '<div><span>Name : </span>'+name+'</div>';
+      str += '<div><span>Email : </span>'+email+'</div>';
+      str += '<div><span>Age : </span>'+age+'</div>';
+      str += '<div><span>Dept : </span>'+dept+'</div>';
+      str += '<div class="moreText" style="display:none">';
+      str += '<div><span class="s1">Graduation : </span>'+gradCourse+'</div>';
+      str += '<div><span class="s1">Year of Graduation : </span>'+gradYear+'</div>';
+      str += '<div><span class="s1">Performance in Graduation : </span>'+gradPerf+'</div>';
+      str += '<div><span class="s1">Post Graduate : </span>'+postgrad+'</div>';
+      str += '<div><span class="s1">Worked Before : </span>'+workBefore+'</div>';
+      str += '<div><span class="s1">Work Experience : </span>'+workEx+'</span></div>';
+      str += '</div>';
+      str += '<div><button class="btn btn-success btn2">More Details</button></div>';
+      str += '</div>';
+      return str;
+  });
+  let btn = '<button class="btn btn-primary mt-2" onclick="showEmployee()">Original View</button>';
+     str += '<div class="row">'+arr.join('')+'</div>';
+     str += btn;
+  document.getElementById('show').innerHTML = str;
+const moreButtons = document.querySelectorAll('.btn2');
+moreButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    const moreText = button.parentNode.parentNode.querySelector('.moreText');
+    const allMoreTexts = document.querySelectorAll('.moreText');
+    allMoreTexts.forEach(text => {
+      if (text !== moreText) {
+        text.style.display = "none";
+        const moreButton = text.previousElementSibling.querySelector('.btn2');
+        if (moreButton) {
+          moreButton.textContent = "More Details";
+        }
+      }
+    });
+    if (moreText.style.display === "none") {
+      moreText.style.display = "block";
+      button.textContent = "Show less";
+    } else {
+      moreText.style.display = "none";
+      button.textContent = "More Details";
+    }
+  });
+});
+
+}
+
+
+
+function makeTextField(id,label,placeholder='',value='',err=''){
+        let str = '<div class="form-group">';
+        str += '<label>'+label+'</label>';
+        str += '<input type="text" id="'+id+'" class="form-control" placeholder="'+placeholder+'" value="'+value+'">';
+        str += err ? '<span id="st" class="text-danger">'+err+'</span>' : '';
+        str += '</div>';
+        return str;
+        }
+
+        function makeRadios(arr, label, name,radioValue='',err='') {
+                const arr1 = arr.map(opt => {
+                    let { display, value } = opt;
+                    let checked = radioValue == value ? 'checked' : '';
+                    let str = '<div class="form-check form-check-inline">';
+                    str += '<input class="form-check-input" type="radio" name="' + name + '" value="' + value + '" '+checked+'>';
+                    str += '<label class="form-check-label">' + display + '</label>';
+                    str += '</div>';
+                    return str;
+                });
+                let s1 = '<div class="form-check form-check-inline">';
+                s1 += '<label class="form-check-label">'+label+'</label>';
+                s1 += '</div>';
+                s1 += arr1.join('');
+                s1 += err ? '<br><span class="text-danger">'+err+'</span>' : '';
+                return s1;
+            }
+
+            function makeDropDawn(id,options,header,selValue='',err){
+                const arr1 = options.map(opt=>{
+                    let selected = opt===selValue ? 'selected' : '';
+                    return '<option '+selected+'>'+opt+'</option>';
+                });
+               let s1 = '<div class="form-group">';
+                s1 += '<select id="'+id+'" class="form-control">';
+                let selectedHeader = selValue ? '' : 'selected';
+                s1 += '<option value="" disabled '+selectedHeader+'>'+header+'</option>';
+                s1 += arr1.join('');
+                s1 += '</select>';
+                s1 += err ? '<span class="text-danger">'+err+'</span>' : '';      
+                s1 += '</div>';
+                return s1;
+            }
+
+            function makeCheckbox(id,label,checked){
+                let c1 = checked ? 'checked' : '';
+               let str = '<div class="form-check">';
+                str += '<input type="checkbox" class="form-check-input" id="'+id+'" '+c1+'>';
+                str += '<label class="form-check-label">'+label+'</label>';
+                str += '</div>';
+                return str;
+            }
+
+
+
+</script>
+
+</body>
+</html>

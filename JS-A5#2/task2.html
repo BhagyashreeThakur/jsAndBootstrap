@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <title>Task 2.1</title>
+    <style>span{color: red; font-weight: 600;}
+    </style>
+  </head>
+<body>
+    <div class="container">
+  <div id="show"></div>
+</div>
+<script>
+    const employees = [
+    {name:'Anna',email:'Anna45@email.com',age:27,dept:'Technology',gradCourse:'B.Tech',gradYear:2015,gradPerf:'Good',postgrad:false,workBefore:true,workEx:'0-1 year'},
+    {name:'Mary',email:'mary16@email.com',age:30,dept:'Accounts',gradCourse:'B.Com',gradYear:2015,gradPerf:'Good',postgrad:true,workBefore:false,workEx:'None'},
+    {name:'Jack',email:'jack@email.com',age:33,dept:'Operations',gradCourse:'BA',gradYear:2015,gradPerf:'Average',postgrad:false,workBefore:true,workEx:'3+ years'},
+    {name:'John',email:'john@email.com',age:24,dept:'Technology',gradCourse:'B.Tech',gradYear:2015,gradPerf:'Good',postgrad:false,workBefore:false,workEx:'None'},
+    {name:'Edwards',email:'edwards@email.com',age:29,dept:'Accounts',gradCourse:'B.Com',gradYear:2015,gradPerf:'Excellent',postgrad:true,workBefore:true,workEx:'3+ years'},
+    {name:'Tim',email:'tim001@email.com',age:31,dept:'Operations',gradCourse:'BSc',gradYear:2015,gradPerf:'Average',postgrad:false,workBefore:true,workEx:'0-1 year'},
+    {name:'Julia',email:'julia@email.com',age:28,dept:'Technology',gradCourse:'B.Tech',gradYear:2015,gradPerf:'Excellent',postgrad:true,workBefore:true,workEx:'1-3 years'},{name:'Steve',email:'steve@email.com',age:25,dept:'Operations',gradCourse:'BA',gradYear:2015,gradPerf:'Good',postgrad:false,workBefore:true,workEx:'0-1 year'},
+    {name:'Sam',email:'sam77@email.com',age:33,dept:'HR',gradCourse:'BBA',gradYear:2015,gradPerf:'Good',postgrad:false,workBefore:true,workEx:'1-3 years'},
+];
+    const departments = ['Technology','Accounts','Operations','HR'];
+    const gradeOptions = [
+        {display:'A',value:'Excellent'},
+        {display:'B',value:'Good'},
+        {display:'C',value:'Average'},
+        {display:'D',value:'Poor'},
+    ];
+ const workExp = [
+        {display:'None',value:'None'},
+        {display:'0-1 year',value:'0-1 year'},
+        {display:'1-3 years',value:'1-3 years'},
+        {display:'3+ years',value:'3+ years'},
+ ]
+ const years = [2019,2020,2021,2022,2023];
+  show();
+  function show(active=0){
+    let str = makeNavBar(active);
+    active === 1 ? str+= showEmployeesTable() : str+= '';
+    active === 2 ? str+= showForm() : str+= '';
+    active === 3 ? str+= showDeptTable() : str+= '';
+    active === 4 ? str+= showDeptForm() : str+= '';
+    document.getElementById('show').innerHTML = str;
+  }
+
+  function showEmployee(){
+    show(1);
+  }
+  function addEmployeeForm(){
+    show(2);
+  }
+  function showDepartments(){
+    show(3);
+  }
+  function addDept(){
+    show(4);
+  } 
+
+  
+  function makeNavBar(active=0){
+    let str = '<nav class="navbar navbar-expand-lg navbar-light bg-light">';
+    str += '<a class="navbar-brand" href="#">Employee System</a>';
+    str += '<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">';
+    str += '<span class="navbar-toggler-icon"></span>';
+    str += '</button>';
+    str += '<div class="collapse navbar-collapse" id="navbarSupportedContent">';
+    str += '<ul class="navbar-nav mr-auto">';
+    let active1 = active === 1 ? 'active' : '';
+    let active2 = active === 2 ? 'active' : '';
+    let active3 = active === 3 ? 'active' : '';
+    let active4 = active === 4 ? 'active' : '';
+    str += '<li class="nav-item '+active1+'">'; 
+    str += '<a class="nav-link" onclick="showEmployee()">Show Employees</a>';
+    str += '</li>';
+    str += '<li class="nav-item '+active2+'">';
+    str += '<a class="nav-link" onclick="addEmployeeForm()">Add an Employee</a>';
+    str += '</li>';
+    str += '<li class="nav-item '+active3+'">';
+    str += '<a class="nav-link" onclick="showDepartments()">Departments</a>';
+    str += '</li>';
+    str += '<li class="nav-item '+active4+'">';
+    str += '<a class="nav-link" onclick="addDept()">Add a Dept</a>';
+    str += '</li>';
+    str += '</ul>';
+    str += '</div>';
+    str += '</nav>';
+    return str;
+  }
+
+  function showEmployeesTable(){
+      const arr = employees.map(emp => {
+            let {name,email,age,dept,gradCourse,workEx} = emp;
+            let str = '<div class="row border">';    
+            str += '<div class="col-2">'+name+'</div>';
+            str += '<div class="col-3">'+email+'</div>';
+            str += '<div class="col-1">'+age+'</div>';
+            str += '<div class="col-2">'+dept+'</div>';
+            str += '<div class="col-2">'+gradCourse+'</div>';
+            str += '<div class="col-2">'+workEx+'</div>';
+            str += '</div>';
+            return str;
+        });
+       let table = '<div class="col-12 text-center"><h3>List of Persons</h3></div>';
+            table += '<div class="row bg-dark text-white">';
+            table += '<div class="col-2" onclick="sort(0)">Name</div>';
+            table += '<div class="col-3" onclick="sort(1)">Email</div>';
+            table += '<div class="col-1" onclick="sort(2)">Age</div>';
+            table += '<div class="col-2" onclick="sort(3)">Dept</div>';
+            table += '<div class="col-2" onclick="sort(4)">Graduation</div>';
+            table += '<div class="col-2" onclick="sort(5)">Work Ex</div>';
+            table += '</div>';
+            let btn = '<button class="btn btn-primary mt-2" onclick="changeView()">Change View</button>';
+            table += arr.join('')+btn;
+            return table; 
+    }
+
+
+    function sort(colNo){
+    switch(colNo){
+        case 0: employees.sort((p1,p2)=>p1.name.localeCompare(p2.name));break;
+        case 1: employees.sort((p1,p2)=>p1.email.localeCompare(p2.email)); break;
+        case 2: employees.sort((p1,p2)=>(+p1.age)-(+p2.age)); break;
+        case 3: employees.sort((p1,p2)=>p1.dept.localeCompare(p2.dept)); break;
+        case 4: employees.sort((p1,p2)=>p1.gradCourse.localeCompare(p2.gradCourse));break;
+        case 5: employees.sort((p1,p2)=>p1.workEx.localeCompare(p2.workEx)); break;
+    }
+   showEmployee();
+  }
+
+    function showDeptTable(){
+      const arr = departments.map(dept => {
+            let str = '<div class="row border">';
+            str += '<div class="col-12">'+dept+'</div>';
+            str += '</div>';
+            return str;
+        });
+        let table = '<div class="row">';
+            if(departments.length == 0){
+                table += '<h5>No department has been defined</h5>';
+            } else{
+                table += '<div class="col-12 text-center">';
+                table += '<h4>List of Departments</h4>';
+                table += '</div>';
+            }
+            table += '</div>';
+            table += arr.join('');
+            return table; 
+    }
+
+    function showDeptForm(){
+            let str = makeTextField('deptId','Name of Department','Enter department');
+            str += '<button class="btn btn-primary" onclick="addDepartment()">Submit</button>';
+            return str;
+    }
+
+    function addDepartment(){
+    let deptName = document.getElementById('deptId').value;
+    departments.push(deptName);
+    showDepartments();
+  }
+
+    function showForm(){
+            let str = makeTextField('empId','Employee Name','Enter the Employee name');
+            str += makeTextField('email','Email','george@gmail.com');
+            str += makeTextField('age','Age','Enter your age');
+            str += makeDropDawn('did',departments,'Select the Department');
+            str += makeTextField('grdId','Graduation Degree','What degree did you get in graduation');
+            str += makeRadios(gradeOptions,'Overall Grade in Graduation','grade');
+            str += makeDropDawn('grdYear',years,'Select the Graduation year');
+            str += makeCheckbox('cb1','Are you a post graduate');
+            str += makeCheckbox('cb2','Do you have prior work exprience');
+            str += makeRadios(workExp,'Year of work exprience','exp')+'<br>';
+            str += '<button class="btn btn-primary" onclick="addEmployee()">Submit</button>';
+            return str;
+    }
+
+
+    function addEmployee(){
+    let empName = document.getElementById('empId').value;
+    let email = document.getElementById('email').value;
+    let age1 = document.getElementById('age').value;
+    let degree = document.getElementById('grdId').value;
+    let radios = document.getElementsByName('grade');
+    let grd = '';
+    for(let i=0; i<radios.length; i++){
+        if(radios[i].checked){
+            grd = radios[i].value;
+        }
+    }
+    let dep = document.getElementById('did').value;
+    console.log(dep);
+    let grdYrs = document.getElementById('grdYear').value;
+    let cb1 = document.getElementById('cb1').checked;
+    let cb2 = document.getElementById('cb2').checked;
+    let radios1 = document.getElementsByName('exp');
+    let workExprience = '';
+    for(let i=0; i<radios1.length; i++){
+        if(radios1[i].checked){
+            workExprience = radios1[i].value;
+        }
+    }
+    //console.log(depart,degree,grd,grdYrs,cb1,cb2,workExprience);
+    let emp = {name:empName,email:email,age:age1,dept:dep,gradCourse:degree,gradYear:grdYrs,
+    gradPerf:grd,postgrad:cb1,workBefore:cb2,workEx:workExprience};
+    employees.push(emp);
+    showEmployee();
+  }
+     
+        function makeTextField(id,label,placeholder=''){
+        let str = '<div class="form-group">';
+        str += '<label>'+label+'</label>';
+        str += '<input type="text" id="'+id+'" class="form-control" placeholder="'+placeholder+'">';
+        str += '</div>';
+        return str;
+        }
+
+
+  function changeView(){
+   let str = makeNavBar(active=0);
+    active === 1 ? str+= showEmployeesTable() : str+= '';
+    active === 2 ? str+= showForm() : str+= '';
+    active === 3 ? str+= showDeptTable() : str+= '';
+    active === 4 ? str+= showDeptForm() : str+= '';
+   str += '<h2 class="text-center">List of Persons</h2>';
+  const arr = employees.map(pr => {
+    let {name,email,age,dept,gradCourse,gradYear,gradPerf,postgrad,workBefore,workEx} = pr;
+    let str = '<div class="col-md-3 card bg-light">';
+      str += '<div><span>Name : </span>'+name+'</div>';
+      str += '<div><span>Email : </span>'+email+'</div>';
+      str += '<div><span>Age : </span>'+age+'</div>';
+      str += '<div><span>Dept : </span>'+dept+'</div>';
+      str += '<div class="moreText" style="display:none">';
+      str += '<div><span class="s1">Graduation : </span>'+gradCourse+'</div>';
+      str += '<div><span class="s1">Year of Graduation : </span>'+gradYear+'</div>';
+      str += '<div><span class="s1">Performance in Graduation : </span>'+gradPerf+'</div>';
+      str += '<div><span class="s1">Post Graduate : </span>'+postgrad+'</div>';
+      str += '<div><span class="s1">Worked Before : </span>'+workBefore+'</div>';
+      str += '<div><span class="s1">Work Experience : </span>'+workEx+'</span></div>';
+      str += '</div>';
+      str += '<div><button class="btn btn-success btn2">More Details</button></div>';
+      str += '</div>';
+      return str;
+  });
+  let btn = '<button class="btn btn-primary mt-2" onclick="showEmployee()">Original View</button>';
+     str += '<div class="row">'+arr.join('')+'</div>';
+     str += btn;
+  document.getElementById('show').innerHTML = str;
+const moreButtons = document.querySelectorAll('.btn2');
+moreButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    const moreText = button.parentNode.parentNode.querySelector('.moreText');
+    const allMoreTexts = document.querySelectorAll('.moreText');
+    allMoreTexts.forEach(text => {
+      if (text !== moreText) {
+        text.style.display = "none";
+        const moreButton = text.previousElementSibling.querySelector('.btn2');
+        if (moreButton) {
+          moreButton.textContent = "More Details";
+        }
+      }
+    });
+    if (moreText.style.display === "none") {
+      moreText.style.display = "block";
+      button.textContent = "Show less";
+    } else {
+      moreText.style.display = "none";
+      button.textContent = "More Details";
+    }
+  });
+});
+
+}
+
+function makeCheckbox(id,label){
+    let str = '<div class="form-check">';
+    str += '<input type="checkbox" class="form-check-input" id="'+id+'">';
+    str += '<label class="form-check-label">'+label+'</label>';
+    str += '</div>';
+    return str;
+}
+
+function makeDropDawn(id,options,header){
+    const arr1 = options.map(opt=>{
+     return '<option>'+opt+'</option>';
+    });
+    let s1 = '<div class="form-group">';
+    s1 += '<select id="'+id+'" class="form-control">';
+    s1 += '<option value="" disabled selected>'+header+'</option>';
+    s1 += arr1.join('');
+    s1 += '</select>';
+    s1 += '</div>';
+    return s1;
+}
+
+function makeRadios(arr, label, name) {
+     const arr1 = arr.map(opt => {
+     let { display, value } = opt;
+     let str = '<div class="form-check form-check-inline">';
+     str += '<input class="form-check-input" type="radio" name="' + name + '" value="' + value + '">';
+     str += '<label class="form-check-label">' + display + '</label>';
+     str += '</div>';
+     return str;
+     });
+     let s1 = '<div class="form-check form-check-inline">';
+     s1 += '<label class="form-check-label">'+label+'</label>';
+     s1 += '</div>';
+     s1 += arr1.join('');
+     return s1;
+}
+
+
+</script>
+
+</body>
+</html>

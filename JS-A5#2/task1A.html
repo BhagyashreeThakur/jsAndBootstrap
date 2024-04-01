@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <title>Task 1C</title>
+  </head>
+<body>
+    <div class="container">
+  <div id="show"></div>
+</div>
+<script>
+    const products = [
+        {product:'Pepsi',price:25, discount:'0',supplier:'Bob Inc.', delivery:true},
+        {product:'Dairy Milk',price:40, discount:'5',supplier:'ABC Limited', delivery:false},
+        {product:'Colgate',price:80, discount:'2',supplier:'James & Co.', delivery:true},
+        {product:'Maggi',price:15, discount:'5',supplier:'ABC Limited', delivery:true},
+        {product:'Snickers',price:50, discount:'2',supplier:'James & Co.', delivery:false},
+        {product:'Nescafe',price:15, discount:'0',supplier:'ABC Limited', delivery:false},
+    ];
+    const discountOptions = [
+                { display: '2%', value: '2' },
+                { display: '5%', value: '5' },
+                { display: 'None', value: '0' }
+            ];
+    const suppliers = ['ABC Limited', 'James & Co.', 'Bob Inc.'];
+
+  show();
+  function show(active=0){
+    let str = makeNavBar(active);
+    active === 1 ? str+= showProductsTable() : str+= '';
+    active === 2 ? str+= showForm() : str+= '';
+    document.getElementById('show').innerHTML = str;
+  }
+
+  function showProducts(){
+    show(1);
+  }
+  function addProductForm(){
+    show(2)
+  }
+  function submitProduct(){
+    let proName = document.getElementById('proName').value;
+    let price = document.getElementById('price').value;
+    let supplier = document.getElementById('supplier').value;
+    let delivery = document.getElementById('delivery').checked;
+    let radios = document.getElementsByName('discount');
+    let discount = '';
+    for(let i=0; i<radios.length; i++){
+        if(radios[i].checked){
+            discount = radios[i].value;
+        }
+    }
+    let pr = {product:proName, price:price, discount:discount,supplier:supplier,delivery:delivery};
+    products.push(pr);
+    showProducts();
+  }
+
+  function sort(colNo){
+    switch(colNo){
+        case 0: products.sort((p1,p2)=>p1.product.localeCompare(p2.product));break;
+        case 1: products.sort((p1,p2)=>(+p1.price)-(+p2.price)); break;
+        case 2: products.sort((p1,p2)=>(+p1.discount)-(+p2.discount)); break;
+        case 3: products.sort((p1,p2)=>p1.supplier.localeCompare(p2.supplier));break;
+        case 4: products.sort((p1,p2)=> p1.delivery ? 1 : -1); break;
+    }
+    showProducts();
+  }
+  function makeNavBar(active=0){
+    let str = '<nav class="navbar navbar-expand-lg navbar-light bg-light">';
+    str += '<a class="navbar-brand" href="#">Store System</a>';
+    str += '<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">';
+    str += '<span class="navbar-toggler-icon"></span>';
+    str += '</button>';
+    str += '<div class="collapse navbar-collapse" id="navbarSupportedContent">';
+    str += '<ul class="navbar-nav mr-auto">';
+    let active1 = active === 1 ? 'active' : '';
+    let active2 = active === 2 ? 'active' : '';
+    str += '<li class="nav-item '+active1+'">'; 
+    str += '<a class="nav-link" onclick="showProducts()">Show Products</a>';
+    str += '</li>';
+    str += '<li class="nav-item '+active2+'">';
+    str += '<a class="nav-link" onclick="addProductForm()">Add a Product</a>';
+    str += '</li>';
+    str += '</ul>';
+    str += '</div>';
+    str += '</nav>';
+    return str;
+  }
+
+  function showProductsTable(){
+      const arr = products.map(pr => {
+            let {product,price,discount,supplier,delivery} = pr;
+            let str = '<div class="row border">';
+            str += '<div class="col-3">'+product+'</div>';
+            str += '<div class="col-1">'+price+'</div>';
+            str += '<div class="col-2">'+discount+'</div>';
+            str += '<div class="col-3">'+supplier+'</div>';
+            str += '<div class="col-2">'+delivery+'</div>';
+            str += '</div>';
+            return str;
+        });
+        let table = '<div class="row bg-dark text-white">';
+            table += '<div class="col-3" onclick="sort(0)">Product</div>';
+            table += '<div class="col-1" onclick="sort(1)">Price</div>';
+            table += '<div class="col-2" onclick="sort(2)">Discount</div>';
+            table += '<div class="col-3" onclick="sort(3)">Supplier</div>';
+            table += '<div class="col-2" onclick="sort(4)">Delivery</div>';
+            table += '</div>';
+            table += arr.join('');
+            return table; 
+    }
+
+    function showForm(){
+            let str = makeTextField('proName','Product Name','Enter the Product name');
+            str += makeTextField('price','Price','Enter the price');
+            str += makeRadios(discountOptions,'Discount','discount');
+            str += makeDropDawn('supplier',suppliers,'Select Supplier');
+            str += makeCheckbox('delivery','Delivery Available');
+            str += '<button class="btn btn-primary" onclick="submitProduct()">Submit</button>';
+            return str;
+        }
+     
+        function makeTextField(id,label,placeholder=''){
+        let str = '<div class="form-group">';
+        str += '<label>'+label+'</label>';
+        str += '<input type="text" id="'+id+'" class="form-control" placeholder="'+placeholder+'">';
+        str += '</div>';
+        return str;
+        }
+
+        function makeRadios(arr, label, name) {
+                const arr1 = arr.map(opt => {
+                    let { display, value } = opt;
+                    let str = '<div class="form-check form-check-inline">';
+                    str += '<input class="form-check-input" type="radio" name="' + name + '" value="' + value + '">';
+                    str += '<label class="form-check-label">' + display + '</label>';
+                    str += '</div>';
+                    return str;
+                });
+                let s1 = '<div class="form-check form-check-inline">';
+                s1 += '<label class="form-check-label">Discount</label>';
+                s1 += '</div>';
+                s1 += arr1.join('');
+                return s1;
+            }
+
+            function makeDropDawn(id,options,header){
+                const arr1 = options.map(opt=>{
+                    return '<option>'+opt+'</option>';
+                });
+               let s1 = '<div class="form-group">';
+                s1 += '<select id="'+id+'" class="form-control">';
+                s1 += '<option value="" disabled selected>'+header+'</option>';
+                s1 += arr1.join('');
+                s1 += '</select>';
+                s1 += '</div>';
+                return s1;
+            }
+
+            function makeCheckbox(id,label){
+               let str = '<div class="form-check">';
+                str += '<input type="checkbox" class="form-check-input" id="'+id+'">';
+                str += '<label class="form-check-label">'+label+'</label>';
+                str += '</div>';
+                return str;
+            }
+</script>
+
+</body>
+</html>

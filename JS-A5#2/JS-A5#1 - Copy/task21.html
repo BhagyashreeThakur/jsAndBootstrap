@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <title>Task 2.1</title>
+    <style>span{color: red; font-weight: 600;}</style>
+  </head>
+<body>
+    <div class="container">
+  <div id="show"></div>
+</div>
+<script>
+    const employees = [
+        {name:'Anna',email:'anna@gmail.com', age:25},
+        {name:'Mary',email:'mary@gmail.com', age:27},
+        {name:'Jack',email:'jack@gmail.com', age:24},
+        {name:'John',email:'john@gmail.com', age:35},
+        {name:'Edwards',email:'edwards@gmail.com', age:22},
+        {name:'Tim',email:'tim@gmail.com', age:27},
+        {name:'Julia',email:'julia@gmail.com', age:28},
+        {name:'Steve',email:'steve@gmail.com', age:25},
+        {name:'Sam',email:'sam@gmail.com', age:26},
+    ];
+    const departments = [];
+  show();
+  function show(active=0){
+    let str = makeNavBar(active);
+    active === 1 ? str+= showEmployeesTable() : str+= '';
+    active === 2 ? str+= showForm() : str+= '';
+    active === 3 ? str+= showDeptTable() : str+= '';
+    active === 4 ? str+= showDeptForm() : str+= '';
+    document.getElementById('show').innerHTML = str;
+  }
+
+  function showEmployee(){
+    show(1);
+  }
+  function addEmployeeForm(){
+    show(2);
+  }
+  function showDepartments(){
+    show(3);
+  }
+  function addDept(){
+    show(4);
+  } 
+
+  function addEmployee(){
+    let empName = document.getElementById('empId').value;
+    let email = document.getElementById('email').value;
+    let age1 = document.getElementById('age').value;
+    let emp = {name:empName,email:email,age:age1};
+    employees.push(emp);
+    showEmployee();
+  }
+  function makeNavBar(active=0){
+    let str = '<nav class="navbar navbar-expand-lg navbar-light bg-light">';
+    str += '<a class="navbar-brand" href="#">Employee System</a>';
+    str += '<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">';
+    str += '<span class="navbar-toggler-icon"></span>';
+    str += '</button>';
+    str += '<div class="collapse navbar-collapse" id="navbarSupportedContent">';
+    str += '<ul class="navbar-nav mr-auto">';
+    let active1 = active === 1 ? 'active' : '';
+    let active2 = active === 2 ? 'active' : '';
+    let active3 = active === 3 ? 'active' : '';
+    let active4 = active === 4 ? 'active' : '';
+    str += '<li class="nav-item '+active1+'">'; 
+    str += '<a class="nav-link" onclick="showEmployee()">Show Employees</a>';
+    str += '</li>';
+    str += '<li class="nav-item '+active2+'">';
+    str += '<a class="nav-link" onclick="addEmployeeForm()">Add an Employee</a>';
+    str += '</li>';
+    str += '<li class="nav-item '+active3+'">';
+    str += '<a class="nav-link" onclick="showDepartments()">Departments</a>';
+    str += '</li>';
+    str += '<li class="nav-item '+active4+'">';
+    str += '<a class="nav-link" onclick="addDept()">Add a Dept</a>';
+    str += '</li>';
+    str += '</ul>';
+    str += '</div>';
+    str += '</nav>';
+    return str;
+  }
+
+  function showEmployeesTable(){
+      const arr = employees.map(emp => {
+            let {name,email,age} = emp;
+            let str = '<div class="row border">';    
+            str += '<div class="col-3">'+name+'</div>';
+            str += '<div class="col-6">'+email+'</div>';
+            str += '<div class="col-3">'+age+'</div>';
+            str += '</div>';
+            return str;
+        });
+       let table = '<div class="col-12 text-center"><h3>List of Persons</h3></div>';
+            table += '<div class="row bg-dark text-white">';
+            table += '<div class="col-3">Name</div>';
+            table += '<div class="col-6">Email</div>';
+            table += '<div class="col-3">Age</div>';
+            table += '</div>';
+            let btn = '<button class="btn btn-primary mt-2" onclick="changeView()">Change View</button>';
+            table += arr.join('')+btn;
+            return table; 
+    }
+
+    function showDeptTable(){
+      const arr = departments.map(dept => {
+            let str = '<div class="row border">';
+            str += '<div class="col-12">'+dept+'</div>';
+            str += '</div>';
+            return str;
+        });
+        let table = '<div class="row">';
+            if(departments.length == 0){
+                table += '<h5>No department has been defined</h5>';
+            } else{
+                table += '<div class="col-12 text-center">';
+                table += '<h4>List of Departments</h4>';
+                table += '</div>';
+            }
+            table += '</div>';
+            table += arr.join('');
+            return table; 
+    }
+
+    function showDeptForm(){
+            let str = makeTextField('deptId','Name of Department','Enter department');
+            str += '<button class="btn btn-primary" onclick="addDepartment()">Submit</button>';
+            return str;
+    }
+
+    function addDepartment(){
+    let deptName = document.getElementById('deptId').value;
+    departments.push(deptName);
+    showDepartments();
+  }
+
+    function showForm(){
+            let str = makeTextField('empId','Employee Name','Enter the Employee name');
+            str += makeTextField('email','Email','george@gmail.com');
+            str += makeTextField('age','Age','Enter your age');
+            str += '<button class="btn btn-primary" onclick="addEmployee()">Submit</button>';
+            return str;
+    }
+     
+        function makeTextField(id,label,placeholder=''){
+        let str = '<div class="form-group">';
+        str += '<label>'+label+'</label>';
+        str += '<input type="text" id="'+id+'" class="form-control" placeholder="'+placeholder+'">';
+        str += '</div>';
+        return str;
+        }
+
+
+  function changeView(){
+   let str = makeNavBar(active=0);
+    active === 1 ? str+= showEmployeesTable() : str+= '';
+    active === 2 ? str+= showForm() : str+= '';
+    active === 3 ? str+= showDeptTable() : str+= '';
+    active === 4 ? str+= showDeptForm() : str+= '';
+   str += '<h2 class="text-center">List of Persons</h2>';
+  const arr = employees.map(pr => {
+    let {name,email,age} = pr;
+    let str = '<div class="col-md-3 card bg-light">';
+      str += '<div><span>Name : </span>'+name+'</div>';
+      str += '<div><span>Email : </span>'+email+'</div>';
+      str += '<div><span>Age : </span>'+age+'</div>';
+      str += '</div>';
+      return str;
+  });
+  let btn = '<button class="btn btn-primary mt-2" onclick="showEmployee()">Original View</button>';
+     str += '<div class="row">'+arr.join('')+'</div>';
+     str += btn;
+  document.getElementById('show').innerHTML = str;
+  
+}
+
+
+</script>
+
+</body>
+</html>
